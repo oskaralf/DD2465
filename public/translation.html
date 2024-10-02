@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Highlighter and Translator</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Text Highlighter and Translator</h1>
+
+  <label>Select a topic for the generated text:</label>
+  <select id="topic-select">
+    <option value="technology">Technology</option>
+    <option value="sports">Sports</option>
+    <option value="travel">Travel</option>
+    <option value="education">Education</option>
+    <option value="fiction">Fiction</option>
+  </select>
+
+  <button id="generate-text-btn">Generate Text</button>
+  <textarea id="text-area" readonly></textarea>
+
+  <div id="translation-popup">
+    <p id="translation-text"></p>
+    <button id="close-popup-button">Close</button>
+  </div>
+
+  <script src="/populateContent.js"></script>
+  <script src="/translation.js"></script>
+  <button onclick="location.href='/'">Go Back to Home</button>
+</body>
+</html>
