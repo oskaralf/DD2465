@@ -71,11 +71,32 @@ app.get('/get-words', (req, res) => {
   });
 });
 
+
+// insert here an api call to GPT for prompts instead of DB
+app.get('/get-text', (req, res) => {
+  const topic = req.query.topic;
+  const query = 'SELECT content FROM topics WHERE topic = ?'
+  if (!topic) {
+    return res.status(400).json({ error: 'Missing topic' });
+  }
+  db.get(query, [topic], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error retrieving text' });
+    }
+    if (row) {
+      res.json({ content: row.content });
+    }
+    else {
+      res.status(404).json({ error: 'Topic not found' });
+    }
+  });
+});  
+
 // Endpoint to use DeepL API for translation
 app.get('/translate', async (req, res) => {
   const word = req.query.word;
   const apiKey = 'a5243198-1429-4f28-bd94-eec183c76442:fx';
-  const targetLang = 'ES'; 
+  const targetLang = req.query.targetLang || 'ES'
 
   try {
     const response = await axios.get('https://api-free.deepl.com/v2/translate', {
