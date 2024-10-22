@@ -4,7 +4,7 @@ function saveWord(word, translation, language) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ word, translation, language }),
+    body: JSON.stringify({ word, translation }),
   })
   .then(response => response.json())
   .then(data => {
@@ -24,10 +24,8 @@ function highlightText() {
   const selectedText = textArea.value.substring(textArea.selectionStart, textArea.selectionEnd);
 
   if (selectedText.length > 0) {
-    const languageSelect = document.getElementById("language-select");
-    const targetLang = languageSelect.value;
-
-    fetch(`/translate?word=${encodeURIComponent(selectedText)}&targetLang=${targetLang}`)
+    console.log(`Translating '${selectedText}' to Swedish`);
+    fetch(`/translate?word=${encodeURIComponent(selectedText)}`)
       .then(response => response.json())
       .then(data => {
         const translation = data.translation;
@@ -37,7 +35,7 @@ function highlightText() {
         popup.style.display = "block";
 
 
-        saveWord(selectedText, translation, targetLang);
+        saveWord(selectedText, translation);
       })
       .catch(error => {
         console.error('Error during translation:', error);
@@ -46,6 +44,7 @@ function highlightText() {
     console.log("No text selected");
   }
 }
+
 
 
 

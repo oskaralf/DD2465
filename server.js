@@ -3,9 +3,13 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const axios = require('axios');
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
+const apiKey = process.env.DEEPL_API_KEY;
+// const apiKey = 'a5243198-1429-4f28-bd94-eec183c76442:fx'
+
 
 app.use(bodyParser.json());
 
@@ -44,20 +48,30 @@ app.get('/profile', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/profile.html'));
 });
 
+app.post('/save-word', async (req, res) => {
+  const { word, translation } = req.body;
+  const language = 'SV';
+  // constant username for now
+  const userName = "oskar";
+  console.log('posted');
 
-app.post('/save-word', (req, res) => {
-  const { word, translation, language } = req.body;
-
-  if (word && translation && language) {
-    const query = 'INSERT INTO translations (word, translation, language) VALUES (?, ?, ?)';
-    db.run(query, [word, translation, language], function (err) {
-      if (err) {
-        return res.status(500).json({ error: 'Error saving data' });
-      }
-      res.json({ success: true, id: this.lastID });
+  try {
+    // Forward the data to FastAPI backend
+    const response = await axios.post('http://localhost:8000/save-word', { 
+      word,
+      translation,
+      language,
+      userName
     });
-  } else {
-    res.status(400).json({ error: 'Missing word, translation, or language' });
+
+    if (response.data.success) {
+      res.json({ success: true, id: response.data.id });
+    } else {
+      res.status(500).json({ error: 'Failed to save word in backend' });
+    }
+  } catch (error) {
+    console.error('Error saving word:', error);
+    res.status(500).json({ error: 'Error saving word' });
   }
 });
 
@@ -92,11 +106,10 @@ app.get('/get-text', (req, res) => {
   });
 });  
 
-// Endpoint to use DeepL API for translation
+// DeepL translation
 app.get('/translate', async (req, res) => {
   const word = req.query.word;
-  const apiKey = 'a5243198-1429-4f28-bd94-eec183c76442:fx';
-  const targetLang = req.query.targetLang || 'ES'
+  const targetLang = 'SV';
 
   try {
     const response = await axios.get('https://api-free.deepl.com/v2/translate', {
@@ -115,7 +128,6 @@ app.get('/translate', async (req, res) => {
   }
 });
 
-// Start the server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Frontend Server is running on http://localhost:${port}`);
 });
