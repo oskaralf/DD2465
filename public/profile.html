@@ -1,18 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile</title>
-  <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electio Profile</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>User Profile</h1>
-  <p>Highlighted Words and Translations:</p>
-  <ul id="highlighted-words-list"></ul> 
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Electio</div>
+            <img src="logos/logo.png" alt="Electio Logo" class="electio-logo">
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/translation">Practice</a></li>
+                    <li><a href="/leaderboard.html">Leaderboard</a></li>
+                    <li><a href="/profile" class="active">Profile</a></li>
+                </ul>
+            </nav>
+            <div class="settings">
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </aside>
 
-  <button onclick="location.href='/'">Go Back to Home</button>
+        <!-- Main Profile Section -->
+        <main class="profile-section">
+            <div class="profile-header">
+                <div class="profile-image-container">
+                    <img src="logos/avatar.png" alt="Profile Picture" class="profile-pic">
+                </div>
+                <div class="profile-info">
+                    <h1>Oskar Alfredsson</h1>
+                    <p>@oskaralf</p>
+                    <p>21 Followers | 78 Following</p>
+                </div>
+                <button class="edit-profile-btn">Edit profile</button>
+            </div>
 
-  <script src="/saveWord.js"></script>
+            <!-- Statistics Section -->
+            <div class="statistics-section">
+                <div class="stat-box red">
+                    <p>16</p>
+                    <span>Days streak</span>
+                </div>
+                <div class="stat-box blue">
+                    <p>10,820</p>
+                    <span>Total XP</span>
+                </div>
+                <div class="stat-box yellow">
+                    <p>834</p>
+                    <span>Days played</span>
+                </div>
+                <div class="stat-box pink">
+                    <p>9</p>
+                    <span>Awards</span>
+                </div>
+                <div class="stat-box green">
+                    <p>4</p>
+                    <span>Languages</span>
+                </div>
+            </div>
+
+            <!-- Achievements Section -->
+            <div class="achievements-section">
+                <h3>Achievements</h3>
+                <div class="achievements">
+                    <div class="achievement">
+                        <img src="logos/spelling.png" alt="Spelling Icon" />
+                        Bibliophile - No unknown words in your last text
+                    </div>
+                    <div class="achievement">
+                        <img src="logos/wizard.png" alt="Wizard Icon" />
+                        Text Wizard - 100+ texts read
+                    </div>
+                    <div class="achievement">
+                        <img src="logos/master.png" alt="Master Icon" />
+                        English Master - Finished English course
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friend Updates Section -->
+            <div class="friend-updates-section">
+                <h3>Friend updates</h3>
+                <div class="friend-updates">
+                    <div class="friend-update">
+                        <img src="logos/boy.png" alt="Josef" />
+                        Josef - Started new language!
+                    </div>
+                    <div class="friend-update">
+                        <img src="logos/girl.png" alt="Dessi" />
+                        Dessi - Finished course
+                    </div>
+                    <div class="friend-update add-friend">+ Add friends</div>
+                </div>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

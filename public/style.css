@@ -1,62 +1,558 @@
-/* styles.css */
-
-/* Set the background color of the entire page */
-body {
-    background-color: green; 
-    font-family: Arial, sans-serif;
-    color: white;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #2f4f2f;
+    color: white;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #1b371b;
+    padding: 20px;
+    width: 250px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-  }
+    justify-content: space-between;
+}
 
-  h1 {
-    margin-top: 20px;
-  }
-
-  #text-area {
-    width: 90%;
-    height: 150px;
-    padding: 10px;
-    border: 2px solid white;
-    border-radius: 5px;
-    background-color: #333;
-    color: white;
-    font-size: 16px;
+.sidebar .logo {
+    font-size: 1.5em;
     margin-bottom: 20px;
-    resize: none;
-  }
+    color: white;
+}
 
-  #translation-popup {
-    display: none;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    color: black;
-    border: 2px solid black;
-    padding: 15px;
+.sidebar nav ul {
+    list-style: none;
+}
+
+.sidebar nav ul li {
+    margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+.sidebar nav ul li a.active {
+    background-color: #3c6f3c;
+    padding: 10px 15px;
     border-radius: 10px;
-    z-index: 1000;
-  }
-  
+}
 
-  button {
-    background-color: #444;
+.settings a {
+    color: #b0b0b0;
+    text-decoration: none;
+    margin-top: 20px;
+    display: block;
+}
+
+/* Main Content (Dashboard & Profile) */
+.main-content, .profile-section {
+    flex: 1;
+    padding: 40px 60px;
+}
+
+.header h1 {
+    font-size: 2.5em;
+}
+
+.languages-section, .skills-section, .lecture-section, .activities-section {
+    margin: 20px 0;
+}
+
+.languages {
+    display: flex;
+    gap: 10px;
+}
+
+.languages img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.add-language {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 2em;
+    border: none;
+    cursor: pointer;
+}
+
+.skills-box, .lecture-box {
+    background-color: #355a35;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.start-quiz, .begin-lecture {
+    background-color: black;
     color: white;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
-    font-size: 14px;
-  }
-  
-  button:hover {
-    background-color: #666;
-  }
-  
+}
+
+.activities {
+    display: flex;
+    gap: 20px;
+}
+
+.activity {
+    background-color: #444;
+    padding: 10px;
+    border-radius: 50%;
+    text-align: center;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1em;
+}
+
+.activity.reading {
+    background-color: #f4b5b5;
+}
+
+.activity.listening {
+    background-color: #f28500;
+}
+
+.activity.grammar {
+    background-color: #4a90e2;
+}
+
+.activity.skill-test {
+    background-color: #ffcc00;
+}
+
+/* Right Sidebar */
+.right-sidebar {
+    background-color: #2f4f2f;
+    padding: 20px;
+    width: 250px;
+}
+
+.daily-challenge {
+    background-color: #355a35;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.daily-challenge h4 {
+    font-size: 1.2em;
+}
+
+.daily-challenge button {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border: none;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.leaderboard-section h4 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.leaderboard-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.leaderboard-section ul li {
+    background-color: #444;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.leaderboard-section ul li:nth-child(1) {
+    background-color: #f4b5b5;
+}
+
+.leaderboard-section ul li:nth-child(2) {
+    background-color: #f28500;
+}
+
+.leaderboard-section ul li:nth-child(3) {
+    background-color: #ff4d4d;
+}
+
+.leaderboard-section ul li:nth-child(4) {
+    background-color: #4CAF50;
+}
+
+/* Profile Page Specific Styles */
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.profile-image-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.profile-info h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+.profile-info p {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+.edit-profile-btn {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Statistics Section */
+.statistics-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.stat-box {
+    background-color: #444;
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    width: 150px;
+}
+
+.stat-box p {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.stat-box span {
+    font-size: 1.2em;
+    font-weight: normal;
+}
+
+.stat-box.red {
+    background-color: #FF5722;
+}
+
+.stat-box.blue {
+    background-color: #2196F3;
+}
+
+.stat-box.yellow {
+    background-color: #FFC107;
+}
+
+.stat-box.pink {
+    background-color: #E91E63;
+}
+
+.stat-box.green {
+    background-color: #4CAF50;
+}
+
+/* Update for Achievement Icons */
+.achievement img {
+    width: 40px; 
+    height: auto; 
+    margin-right: 10px; 
+    vertical-align: middle; 
+}
+
+/* Adjust the achievements to keep the layout intact */
+.achievements {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.achievement {
+    background-color: #355a35;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    width: 30%;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+
+/* Update for Friend Update Icons */
+.friend-update img {
+    width: 40px; 
+    height: auto; 
+    margin-right: 10px; 
+    vertical-align: middle; 
+}
+
+
+.friend-updates {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap; 
+    width: 100%;
+}
+
+.friend-update {
+    background-color: #355a35;
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    width: 30%;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.friend-update.add-friend {
+    background-color: #444;
+    cursor: pointer;
+    justify-content: center;
+    font-size: 1.2em;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Styling for form sections and textarea in translation page */
+.form-section {
+    margin-bottom: 20px;
+}
+
+.form-section label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#language-select, #topic-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#text-area {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 20px;
+    color: black;
+    background-color: #f9f9f9;
+}
+
+/* Popup styling */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    color: black;
+}
+
+.popup.hidden {
+    display: none;
+}
+
+#close-popup-button {
+    margin-top: 20px;
+}
+
+.generate-text-btn, .primary-btn {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Leaderboard Specific Styles */
+.leaderboard-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.leaderboard-section ul li {
+    background-color: #444; /* Default background for non-ranked items */
+    padding: 10px 20px;
+    margin-bottom: 15px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2em;
+}
+
+.leaderboard-section ul li span.rank {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.leaderboard-section ul li .points {
+    font-weight: bold;
+    color: white;
+}
+
+/* Styles for the emoji images */
+.leaderboard-img {
+    width: 30px;
+    height: auto;
+    margin-right: 15px;
+    vertical-align: middle;
+}
+
+.leaderboard-section ul li.rank-1 {
+    background-color: #f4b5b5 !important; /* Light pink */
+}
+
+.leaderboard-section ul li.rank-2 {
+    background-color: #FFA500 !important; /* Bright orange */
+}
+
+.leaderboard-section ul li.rank-3 {
+    background-color: #FF6347 !important; /* Light red */
+}
+
+.leaderboard-section ul li.rank-4 {
+    background-color: #32CD32 !important; /* Lime green */
+}
+
+.leaderboard-section ul li.rank-5 {
+    background-color: #4682B4 !important; /* Steel blue */
+}
+
+.leaderboard-section ul li.rank-6 {
+    background-color: #C71585 !important; /* Medium violet red */
+}
+
+.leaderboard-section ul li.rank-7 {
+    background-color: #FFD700 !important; /* Gold */
+}
+
+.leaderboard-section ul li.rank-8 {
+    background-color: #D3D3D3 !important; /* Light gray */
+}
+/* Avatar Styles */
+.header {
+    position: relative; /* Ensure the avatar is positioned relative to the header */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0; /* Adjust margins to align the heading with the avatar */
+}
+
+.header .avatar {
+    width: 50px; /* Adjust the size of the avatar */
+    height: 50px; /* Ensure the image has a consistent height */
+    border-radius: 50%; /* Make the image circular */
+    object-fit: cover; /* Ensure the image covers the space without distortion */
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 20px;
+    margin-top: 10px;
+}
+
+
+/* Logo in the Sidebar */
+.sidebar .logo {
+    font-size: 1.5em;
+    margin-bottom: 1px; /* Reduce the space between "Electio" text and the logo */
+    color: white;
+    text-align: center; /* Center the text and logo */
+}
+
+.sidebar .electio-logo {
+    width: 120px; /* Increase the size of the logo */
+    height: auto; /* Maintain aspect ratio */
+    display: block;
+    margin: 5px auto 10px; /* Move the logo a bit further up by reducing top and bottom margins */
+}
+
+

@@ -1,42 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Text Highlighter and Translator</title>
-  <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Text Highlighter and Translator</h1>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Electio</div>
+            <img src="logos/logo.png" alt="Electio Logo" class="electio-logo">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="translation.html" class="active">Practice</a></li>
+                    <li><a href="/leaderboard.html">Leaderboard</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                </ul>
+            </nav>
+            <div class="settings">
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </aside>
 
-  <label>Select a language to learn:</label>
-  <select id="language-select">
-    <option value="ES">Spanish</option>
-    <option value="FR">French</option>
-    <option value="DE">German</option>
-    <option value="EN">English</option>
-    <option value="SE">Swedish</option>
-  </select>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Daily text!</h1>
+            </div>
 
-  <label>Select a topic for the generated text:</label>
-  <select id="topic-select">
-    <option value="technology">Technology</option>
-    <option value="sports">Sports</option>
-    <option value="travel">Travel</option>
-    <option value="education">Education</option>
-    <option value="fiction">Fiction</option>
-  </select>
+            <div class="form-section">
+                <label for="language-select">Select a language to learn:</label>
+                <select id="language-select">
+                    <option value="ES">Spanish</option>
+                    <option value="FR">French</option>
+                    <option value="DE">German</option>
+                    <option value="EN">English</option>
+                    <option value="SE">Swedish</option>
+                </select>
+            </div>
 
-  <button id="generate-text-btn">Generate Text</button>
-  <textarea id="text-area" readonly></textarea>
+            <div class="form-section">
+                <label for="topic-select">Select a topic for the generated text:</label>
+                <select id="topic-select">
+                    <option value="technology">Technology</option>
+                    <option value="sports">Sports</option>
+                    <option value="travel">Travel</option>
+                    <option value="education">Education</option>
+                    <option value="fiction">Fiction</option>
+                </select>
+            </div>
 
-  <div id="translation-popup">
-    <p id="translation-text"></p>
-    <button id="close-popup-button">Close</button>
-  </div>
+            <button id="generate-text-btn" class="primary-btn">Generate Text</button>
 
-  <script src="/populateContent.js"></script>
-  <script src="/translation.js"></script>
-  <button onclick="location.href='/'">Go Back to Home</button>
+            <textarea id="text-area" readonly></textarea>
+
+            <!-- Popup for translation -->
+            <div id="translation-popup" class="popup hidden">
+                <p id="translation-text"></p>
+                <button id="close-popup-button" class="primary-btn">Close</button>
+            </div>
+
+            <button class="primary-btn" onclick="location.href='index.html'">Go Back to Home</button>
+        </main>
+    </div>
+
+    <script src="/populateContent.js"></script>
+    <script src="/translation.js"></script>
 </body>
 </html>
