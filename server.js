@@ -8,7 +8,6 @@ require('dotenv').config();
 const app = express();
 const port = 3000;
 const apiKey = process.env.DEEPL_API_KEY;
-// const apiKey = 'a5243198-1429-4f28-bd94-eec183c76442:fx'
 
 
 app.use(bodyParser.json());
