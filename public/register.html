@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electio - Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <!-- Centered Registration Box -->
+        <div class="login-box">
+            <div class="logo">Electio</div>
+            <h1>Register</h1>
+            <form id="register-form" action="/register" method="POST">
+                
+                <!-- Username Field -->
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter your username">
+                
+                <!-- Language Selection -->
+                <label for="language">Language</label>
+                <select id="language" name="language" required>
+                    <option value="" disabled selected>Select your language</option>
+                    <option value="english">English</option>
+                    <option value="spanish">Spanish</option>
+                    <option value="french">French</option>
+                    <option value="german">German</option>
+                </select>
+                
+                <!-- Interests Field -->
+                <label for="interests">Interests</label>
+                <input type="text" id="interests" name="interests" required placeholder="Enter your interests (e.g., music, sports)">
+                
+                <!-- Submit Button -->
+                <button type="submit" class="primary-btn">Register</button>
+            </form>
+
+            <!-- Link to Login -->
+            <a href="index.html" class="register-link"><button class="secondary-btn">Already have an account? Login</button></a>
+        </div>
+    </div>
+</body>
+</html>

@@ -9,8 +9,13 @@ const app = express();
 const port = 3000;
 const apiKey = process.env.DEEPL_API_KEY;
 
+let currentUsername = '';
+let currentLanguage = '';
+let currentInterests = '';
+
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -47,15 +52,54 @@ app.get('/profile', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/profile.html'));
 });
 
+
+
+app.get('/get-words', (req, res) => {
+  const query = 'SELECT word, translation, language FROM translations ORDER BY created_at DESC';
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error retrieving words' });
+    }
+    res.json({ words: rows });
+  });
+});
+
+app.post('/login', (req, res) => {
+  const username = req.body.username;
+  currentUsername = username;
+
+  console.log("Username received:", username);
+
+  res.redirect('/dashboard.html');
+});
+
+
+app.post('/register', (req, res) => {
+  const username = req.body.username;
+  const language = req.body.language;
+  const interests = req.body.interests;
+
+  currentUsername = username;
+  currentLanguage = language;
+  currentInterests = interests;
+
+  console.log("Registration data saved:", {
+      username: currentUsername,
+      language: currentLanguage,
+      interests: currentInterests
+  });
+
+  res.redirect('/determineScore.html');
+});
+
+
 app.post('/save-word', async (req, res) => {
   const { word, translation } = req.body;
   const language = 'SV';
-  // constant username for now
-  const userName = "oskar";
+  const userName = currentUsername;
   console.log('posted');
 
   try {
-    // Forward the data to FastAPI backend
     const response = await axios.post('http://localhost:8000/save-word', { 
       word,
       translation,
@@ -74,15 +118,33 @@ app.post('/save-word', async (req, res) => {
   }
 });
 
-app.get('/get-words', (req, res) => {
-  const query = 'SELECT word, translation, language FROM translations ORDER BY created_at DESC';
-  db.all(query, [], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error retrieving words' });
-    }
-    res.json({ words: rows });
+
+app.post('/saveUserScore', (req, res) => {
+  const score = req.body.userScore;
+  const name = currentUsername;
+  const language = currentLanguage;
+  const interests = currentInterests;
+  currentScore = score;
+
+  console.log("Score data saved:", { score: score });
+
+  axios.post('http://localhost:8000/save-user', {
+    name: name,
+    score: score,
+    language: language,
+    interests: interests
+  })
+  .then(response => {
+    console.log("User score logged in backend:", response.data);
+    // Send JSON response to redirect the user
+    res.json({ message: 'User score saved successfully', redirect: '/dashboard.html' });
+  })
+  .catch(error => {
+    console.error("Failed to log user score to backend:", error);
+    res.status(500).json({ message: "Failed to log user score to backend" });
   });
 });
+
 
 
 // insert here an api call to GPT for prompts instead of DB
