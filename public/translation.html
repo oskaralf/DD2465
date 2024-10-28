@@ -1,74 +1,233 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Translator</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">Electio</div>
-            <img src="logos/logo.png" alt="Electio Logo" class="electio-logo">
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="translation.html" class="active">Practice</a></li>
-                    <li><a href="/leaderboard.html">Leaderboard</a></li>
-                    <li><a href="profile.html">Profile</a></li>
-                </ul>
-            </nav>
-            <div class="settings">
-                <a href="#">Settings</a>
-                <a href="#">Logout</a>
-            </div>
-        </aside>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Translator</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="logo">Electio</div>
+                <img
+                    src="logos/logo.png"
+                    alt="Electio Logo"
+                    class="electio-logo"
+                />
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>
+                            <a href="translation.html" class="active"
+                                >Practice</a
+                            >
+                        </li>
+                        <li><a href="/leaderboard.html">Leaderboard</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                    </ul>
+                </nav>
+                <div class="settings">
+                    <a href="#">Settings</a>
+                    <a href="#">Logout</a>
+                </div>
+            </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="header">
-                <h1>Daily text!</h1>
-            </div>
+            <!-- Main Content -->
+            <main class="main-content">
 
-            <div class="form-section">
-                <label for="language-select">Select a language to learn:</label>
-                <select id="language-select">
-                    <option value="ES">Spanish</option>
-                    <option value="FR">French</option>
-                    <option value="DE">German</option>
-                    <option value="EN">English</option>
-                    <option value="SE">Swedish</option>
-                </select>
-            </div>
+                <div class="header">
+                    <h1>Select a Context</h>
+                </div>
+                <div class="header">
+                    <h2>Generated for you</h2>
+                </div>
+                <!-- Button container where dynamically created context buttons will appear -->
+                <div id="context-buttons" class="form-section"></div>
 
-            <div class="form-section">
-                <label for="topic-select">Select a topic for the generated text:</label>
-                <select id="topic-select">
-                    <option value="technology">Technology</option>
-                    <option value="sports">Sports</option>
-                    <option value="travel">Travel</option>
-                    <option value="education">Education</option>
-                    <option value="fiction">Fiction</option>
-                </select>
-            </div>
+                <!-- Button container where dynamically created types buttons will appear -->
+                <div id="types-section">
+                    <h1>Select a text type</h1>
+                    <h2>Generated for you</h2>
+                    <div id="types-buttons" class="form-section"></div>
+                </div>
 
-            <button id="generate-text-btn" class="primary-btn">Generate Text</button>
+                <!-- Section to display the fetched text -->
+                <div id="text-section">
+                    <h2>Generated Text</h2>
+                    <textarea id="text-display" class="text-output" readonly></textarea> <!-- This will display the fetched text -->
+                </div>
 
-            <textarea id="text-area" readonly></textarea>
+                <!-- Popup for translation -->
+                <div id="translation-popup" class="popup hidden">
+                    <p id="translation-text"></p>
+                    <button id="close-popup-button" class="primary-btn">Close</button>
+                </div>
 
-            <!-- Popup for translation -->
-            <div id="translation-popup" class="popup hidden">
-                <p id="translation-text"></p>
-                <button id="close-popup-button" class="primary-btn">Close</button>
-            </div>
+                <!-- Go Back to Home button -->
+                <button
+                    class="primary-btn"
+                    onclick="location.href='index.html'"
+                >
+                    Go Back to Home
+                </button>
+            </main>
+        </div>
 
-            <button class="primary-btn" onclick="location.href='index.html'">Go Back to Home</button>
-        </main>
-    </div>
+        <div id="examples-section">
+            <h3>Examples Contexts</h3>
+            <pre id="examples-output"></pre>
+        </div>
 
-    <script src="/populateContent.js"></script>
-    <script src="/translation.js"></script>
-</body>
+        <script>
+            // Fetch contexts from your server's /get-contexts endpoint and create buttons
+            async function fetchContexts() {
+                try {
+                    const response = await fetch('/get-contexts'); // Fetching from your server's endpoint
+                    if (response.ok) {
+                        const contexts = await response.json();
+                        const contextButtonsContainer = document.getElementById('context-buttons');
+
+                        // Clear any existing buttons
+                        contextButtonsContainer.innerHTML = '';
+
+                        // Create a button for each context
+                        contexts.forEach(context => {
+                            const button = document.createElement('button');
+                            button.textContent = context;
+                            button.classList.add('primary-btn'); // Apply button styling
+                            button.addEventListener('click', () => {
+                                console.log(`Context clicked: ${context}`); // Log context to confirm the button was clicked
+                                fetchTypes(context); // Call function to fetch types based on the context
+                            });
+                            contextButtonsContainer.appendChild(button);
+                        });
+                    } else {
+                        console.error('Error fetching contexts');
+                    }
+                } catch (error) {
+                    console.error('Fetch error: ', error);
+                }
+            }
+
+            // Fetch types from /get-text-types endpoint when a context button is clicked
+            async function fetchTypes(context) {
+                try {
+                    console.log(`Fetching types for context: ${context}`); // Debug log to confirm request is triggered
+                    const response = await fetch(`/get-text-types?context=${encodeURIComponent(context)}`); // Fetch types based on the selected context
+
+                    if (response.ok) {
+                        const types = await response.json();
+                        const typesButtonsContainer = document.getElementById('types-buttons'); // Assuming there's a div for types buttons
+
+                        // Clear any existing buttons
+                        typesButtonsContainer.innerHTML = '';
+
+                        // Create a button for each type
+                        types.forEach(type => {
+                            const button = document.createElement('button');
+                            button.textContent = type;
+                            button.classList.add('primary-btn'); // Apply button styling
+                            button.addEventListener('click', () => {
+                                console.log(`Type clicked: ${type} for context: ${context}`); // Log type and context
+                                fetchText(context, type); // Call function to fetch text based on context and type
+                            });
+                            typesButtonsContainer.appendChild(button);
+                        });
+                    } else {
+                        console.error('Error fetching types');
+                    }
+                } catch (error) {
+                    console.error('Fetch error: ', error);
+                }
+            }
+
+            // Fetch text based on both context and type when a type button is clicked
+            // Fetch text based on both context and type when a type button is clicked
+            async function fetchText(context, type) {
+                try {
+                    console.log(`Fetching text for context: ${context}, type: ${type}`); // Debug log to confirm request
+
+                    // Send request to API with both context and type
+                    const response = await fetch(`/get-text?context=${encodeURIComponent(context)}&type=${encodeURIComponent(type)}`);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log("Received text:", data); // Debug log to check the received data
+
+                        // Replace new lines with <br> for proper HTML formatting
+                        const formattedText = data.replace(/<br>/g, '\n'); // Convert <br> tags back to new lines if present
+
+                        // You can now handle the fetched text, display it, or perform another action
+                        const textDisplay = document.getElementById('text-display');
+                        textDisplay.innerHTML = formattedText; // Use innerHTML to render HTML
+                    } else {
+                        console.error('Error fetching text');
+                    }
+                } catch (error) {
+                    console.error('Fetch error: ', error);
+                }
+            }
+
+            function highlightText() {
+              const textArea = document.getElementById("text-display");
+              console.log(textArea.selectionStart);
+              const selectedText = textArea.value.substring(textArea.selectionStart, textArea.selectionEnd);
+
+              if (selectedText.length > 0) {
+                console.log(`Translating '${selectedText}' to Swedish`);
+                fetch(`/translate?word=${encodeURIComponent(selectedText)}`)
+                  .then(response => response.json())
+                  .then(data => {
+                    const translation = data.translation;
+
+                    const popup = document.getElementById("translation-popup");
+                    document.getElementById("translation-text").textContent = `The translation of '${selectedText}' is: ${translation}`;
+                    popup.style.display = "block";
+
+                    console.log('nu')
+                    console.log(selectedText)
+                    console.log(translation)
+                    saveWord(selectedText, translation);
+                  })
+                  .catch(error => {
+                    console.error('Error during translation:', error);
+                  });
+              } else {
+                console.log("No text selected");
+              }
+            }
+
+            function saveWord(word, translation) {
+              console.log('heheheheh')
+              fetch('/save-word', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ word, translation }),
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  console.log('Word saved successfully:', data.id);
+                } else {
+                  console.error('Error saving word:', data.error);
+                }
+              })
+              .catch(error => console.error('Error:', error));
+            }
+
+            function closePopup() {
+              document.getElementById("translation-popup").style.display = "none";
+            }
+
+            document.getElementById("text-display").addEventListener("mouseup", highlightText);
+            document.getElementById("close-popup-button").addEventListener("click", closePopup);
+
+            // Call the fetch function when the page loads
+            document.addEventListener('DOMContentLoaded', fetchContexts);
+        </script>
+    </body>
 </html>
