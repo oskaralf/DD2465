@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electio Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Electio</div>
+            <img src="logos/logo.png" alt="Electio Logo" class="electio-logo">
+            <nav>
+                <ul>
+                    <li><a href="/dashboard.html" class="button active">Home</a></li>
+                    <li><a href="/translation" class="button">Practice</a></li>
+                    <li><a href="/leaderboard.html" class="button">Leaderboard</a></li>
+                    <li><a href="/profile" class="button">Profile</a></li>
+                </ul>
+                
+            </nav>
+            <div class="settings">
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Good evening, Oskar!</h1>
+                <p>Level 76</p>
+            </div>
+
+            <div class="languages-section">
+                <h3>Your Languages</h3>
+                <div class="languages">
+                    <img src="logos/spain.png" alt="Spanish">
+                    <img src="logos/italy.png" alt="Italian">
+                    <img src="logos/france.png" alt="French">
+                    <img src="logos/germany.png" alt="German">
+                    <button class="add-language">+</button>
+                </div>
+            </div>
+
+            <div class="skills-section">
+                <div class="skills-box">
+                    <h4>Test your skills</h4>
+                    <p>Track your progress with the quiz!</p>
+                </div>
+                <button class="start-quiz">Start quiz</button>
+            </div>
+
+            <div class="lecture-section">
+                <h4>Today's Lecture</h4>
+                <div class="lecture-box">
+                    <img src="italy-logo.png" alt="Italian">
+                    <div>
+                        <h5>Italian</h5>
+                        <p>Food 4</p>
+                    </div>
+                    <a href="/translation"><button class="begin-lecture">Begin</button></a> <!-- Link to translation page -->
+                </div>
+            </div>
+
+            <div class="activities-section">
+                <h3>Activities</h3>
+                <div class="activities">
+                    <div class="activity reading">Reading</div>
+                    <div class="activity listening">Listening</div>
+                    <div class="activity grammar">Grammar</div>
+                    <div class="activity skill-test">Skill test</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="daily-challenge">
+                <h4>Daily Challenge</h4>
+                <p>Guess these 20 words without failing!</p>
+                <button class="try-now">Try now</button>
+            </div>
+
+            <div class="leaderboard-section">
+                <h4>Leaderboard</h4>
+                <ul>
+                    <li><span class="rank">#01</span> Tekla <span class="points">2398 pts</span></li>
+                    <li><span class="rank">#02</span> Dessi <span class="points">2019 pts</span></li>
+                    <li><span class="rank">#03</span> Felix <span class="points">1832 pts</span></li>
+                    <li><span class="rank">#04</span> Josef <span class="points">420 pts</span></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>

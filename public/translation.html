@@ -38,20 +38,36 @@
             <main class="main-content">
 
                 <div class="header">
-                    <h1>Select a Context</h>
-                </div>
+                    <h1>Pick a Context</h1>
+                </div>                
                 <div class="header">
-                    <h2>Generated for you</h2>
+                    <h2>Ideas on a silver platter</h2>
                 </div>
                 <!-- Button container where dynamically created context buttons will appear -->
                 <div id="context-buttons" class="form-section"></div>
+                <button class="custom-btn" onclick="openModal('context-modal')">
+                    I've got a better idea!
+                </button>
+
 
                 <!-- Button container where dynamically created types buttons will appear -->
                 <div id="types-section">
-                    <h1>Select a text type</h1>
-                    <h2>Generated for you</h2>
+                    <h1>Pick a text type</h1>
+                    <h2>Ideas on a silver platter</h2>
                     <div id="types-buttons" class="form-section"></div>
+                    <button class="custom-btn" onclick="openModal('type-modal')">
+                        I've got a better idea!
+                    </button>
                 </div>
+
+                <!-- Fetch Text Button to Combine Inputs -->
+                <button class="custom-btn" onclick="fetchCustomText()">
+                    Generate
+                </button>
+                
+                <button id="lucky-button" class="large-button" onclick="fetchText('random, but make it fun', 'random, but make it fun')">
+                    I'm Feeling Lucky
+                </button>
 
                 <!-- Section to display the fetched text -->
                 <div id="text-section">
@@ -68,11 +84,32 @@
                 <!-- Go Back to Home button -->
                 <button
                     class="primary-btn"
-                    onclick="location.href='index.html'"
+                    onclick="location.href='dashboard.html'"
                 >
                     Go Back to Home
                 </button>
             </main>
+
+            <!-- Modal for Custom Context Input -->
+            <div id="context-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h2>Enter Custom Context</h2>
+                    <input type="text" id="custom-context-input" placeholder="Custom context" />
+                    <button class="primary-btn" onclick="submitCustomContext()">Submit</button>
+                    <button class="primary-btn" onclick="closeModal('context-modal')">Close</button>
+                </div>
+            </div>
+
+            <!-- Modal for Custom Type Input -->
+            <div id="type-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h2>Enter Custom Type</h2>
+                    <input type="text" id="custom-type-input" placeholder="Custom type" />
+                    <button class="primary-btn" onclick="submitCustomType()">Submit</button>
+                    <button class="primary-btn" onclick="closeModal('type-modal')">Close</button>
+                </div>
+            </div>
+
         </div>
 
         <div id="examples-section">
@@ -81,6 +118,63 @@
         </div>
 
         <script>
+
+            let selectedContext = null;
+            let selectedType = null;
+
+            // Open modal by setting display to flex
+            function openModal(modalId) {
+                document.getElementById(modalId).style.display = 'flex';
+            }
+            // Close modal by setting display to none
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+
+            function submitCustomContext() {
+                const customContext = document.getElementById('custom-context-input').value.trim();
+                if (customContext) {
+                    selectedContext = customContext;
+                    console.log(`Custom context submitted: ${customContext}`);
+                    closeModal('context-modal');
+                    fetchTypes(customContext);
+                }
+            }
+
+            // Submit custom type and close modal
+            function submitCustomType() {
+                const customType = document.getElementById('custom-type-input').value.trim();
+                if (customType) {
+                    selectedType = customType;
+                    console.log(`Custom type submitted: ${customType}`);
+                    closeModal('type-modal');
+                }
+            }
+
+
+            // Handle button clicks for context and type
+            function handleContextSelection(context) {
+                selectedContext = context;
+                console.log(`Selected context from button: ${context}`);
+            }
+
+            function handleTypeSelection(type) {
+                selectedType = type;
+                console.log(`Selected type from button: ${type}`);
+            }
+            
+            // Fetch text using selected button or custom input values
+            function fetchCustomText() {
+                const contextToUse = selectedContext;
+                const typeToUse = selectedType;
+
+                if (contextToUse && typeToUse) {
+                    console.log(`Fetching text with context: ${contextToUse} and type: ${typeToUse}`);
+                    fetchText(contextToUse, typeToUse);
+                } else {
+                    console.log("Please select or enter both a context and type.");
+                }
+            }
             // Fetch contexts from your server's /get-contexts endpoint and create buttons
             async function fetchContexts() {
                 try {
@@ -92,13 +186,24 @@
                         // Clear any existing buttons
                         contextButtonsContainer.innerHTML = '';
 
+                        // Variable to store the currently active button
+                        let contextActiveButton = null;
+
                         // Create a button for each context
                         contexts.forEach(context => {
                             const button = document.createElement('button');
                             button.textContent = context;
                             button.classList.add('primary-btn'); // Apply button styling
+
                             button.addEventListener('click', () => {
                                 console.log(`Context clicked: ${context}`); // Log context to confirm the button was clicked
+                                
+                                if (contextActiveButton) {
+                                    contextActiveButton.classList.remove('active');
+                                }
+                                button.classList.add('active');
+                                contextActiveButton = button;
+
                                 fetchTypes(context); // Call function to fetch types based on the context
                             });
                             contextButtonsContainer.appendChild(button);
@@ -124,6 +229,10 @@
                         // Clear any existing buttons
                         typesButtonsContainer.innerHTML = '';
 
+                        // Variable to store the currently active button
+                        let typeActiveButton = null;
+
+
                         // Create a button for each type
                         types.forEach(type => {
                             const button = document.createElement('button');
@@ -131,6 +240,13 @@
                             button.classList.add('primary-btn'); // Apply button styling
                             button.addEventListener('click', () => {
                                 console.log(`Type clicked: ${type} for context: ${context}`); // Log type and context
+
+                                if (typeActiveButton) {
+                                    typeActiveButton.classList.remove('active');
+                                }
+                                button.classList.add('active');
+                                typeActiveButton = button;
+
                                 fetchText(context, type); // Call function to fetch text based on context and type
                             });
                             typesButtonsContainer.appendChild(button);
@@ -143,7 +259,6 @@
                 }
             }
 
-            // Fetch text based on both context and type when a type button is clicked
             // Fetch text based on both context and type when a type button is clicked
             async function fetchText(context, type) {
                 try {
@@ -228,6 +343,25 @@
 
             // Call the fetch function when the page loads
             document.addEventListener('DOMContentLoaded', fetchContexts);
+            // Add event listeners to button-based context and type options
+            document.addEventListener('DOMContentLoaded', () => {
+                const contextButtons = document.getElementById('context-buttons').getElementsByTagName('button');
+                for (let button of contextButtons) {
+                    button.addEventListener('click', () => {
+                        selectedContext = button.textContent;
+                        console.log(`Selected context from button: ${selectedContext}`);
+                    });
+                }
+
+                const typeButtons = document.getElementById('types-buttons').getElementsByTagName('button');
+                for (let button of typeButtons) {
+                    button.addEventListener('click', () => {
+                        selectedType = button.textContent;
+                        console.log(`Selected type from button: ${selectedType}`);
+                    });
+                }
+            });
+
         </script>
     </body>
 </html>

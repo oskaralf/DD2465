@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require("express-session")
 const path = require("path");
 const bodyParser = require("body-parser");
 const sqlite3 = require("sqlite3").verbose();
@@ -10,26 +11,17 @@ const port = 3000;
 const apiKey = process.env.DEEPL_API_KEY;
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // For HTML form submissions
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const db = new sqlite3.Database("./word.db", (err) => {
-  if (err) {
-    console.error("Error opening database", err);
-  } else {
-    console.log("Connected to SQLite database");
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
 
-    db.run(`
-      CREATE TABLE IF NOT EXISTS translations (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        word TEXT NOT NULL,
-        translation TEXT NOT NULL,
-        language TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-  }
-});
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.html"));
@@ -42,6 +34,52 @@ app.get("/translation", (req, res) => {
 app.get("/profile", (req, res) => {
   res.sendFile(path.join(__dirname, "public/profile.html"));
 });
+
+app.post('/login', (req, res) => {
+  const { username } = req.body;
+  console.log("username", username);
+  axios.post('http://127.0.0.1:8000/login-user', {
+    name: username,
+  })
+  .then(response => {
+    console.log("successful login");
+    req.session.username = username;
+
+    // Send JSON response to redirect the user
+    res.redirect('/dashboard.html');
+  })
+  .catch(error => {
+    console.error("Account not found"); //, error);
+    res.status(500).json({ message: "Account not found" });
+  });
+});
+
+app.post('/register', (req, res) => {
+  const { name, language, interests } = req.body;
+
+  console.log("Registration data saved:", {
+      name: name,
+      language: language,
+      interests: interests
+  });
+  req.session.username = name;
+  console.log('asdasda')
+  axios.post('http://127.0.0.1:8000/register-user', {
+    name: name,
+    language: language,
+    interests: interests
+  })
+  .then(response => {
+    console.log("User score logged in backend:", response.data);
+    // Send JSON response to redirect the user
+    res.redirect('/determineScore.html');
+  })
+  .catch(error => {
+    console.error("Failed to log user score to backend:"); //, error);
+    res.status(500).json({ message: "Failed to log user score to backend" });
+  });
+});
+
 
 app.post("/save-word", async (req, res) => {
   console.log("ebnterign serv");
@@ -168,6 +206,31 @@ app.get("/get-text-types", async (req, res) => {
     res.status(500).json({ error: "Error getting text types" });
   }
 });
+
+app.post('/saveUserScore', (req, res) => {
+  const { userScore, name, language, interests } = req.body;
+  console.log("Score data saved:", { score: userScore });
+
+
+  axios.post('http://localhost:8000/register-user', {
+    name: name,
+    score: userScore
+  })
+  .then(response => {
+    console.log("User score logged in backend:", response.data);
+    // Send JSON response to redirect the user
+    res.json({ message: 'User score saved successfully', redirect: '/dashboard.html' });
+  })
+  .catch(error => {
+    console.error("Failed to log user score to backend:", error);
+    res.status(500).json({ message: "Failed to log user score to backend" });
+  });
+});
+
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Frontend Server is running on http://localhost:${port}`);
