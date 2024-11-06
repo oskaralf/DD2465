@@ -35,6 +35,22 @@ app.get("/profile", (req, res) => {
   res.sendFile(path.join(__dirname, "public/profile.html"));
 });
 
+app.post('/updateUserScore', (req, res) => {
+  const { username } = req.session
+  console.log("username", username);
+  axios.post('http://127.0.0.1:8000/update-score', {
+    name: username,
+  })
+  .then(response => {
+    console.log("successful score update");
+    res.json(response.data)
+  })
+  .catch(error => {
+    console.error("failed to update score"); //, error);
+    res.status(500).json({ message: "Account not found" });
+  });
+});
+
 app.post('/login', (req, res) => {
   const { username } = req.body;
   console.log("username", username);
@@ -81,13 +97,59 @@ app.post('/register', (req, res) => {
 });
 
 
+app.post('/getNewSentence', async (req, res) => {
+  const { sentenceHistory } = req.body; // Read level and sentenceHistory from the request body
+
+  try {
+    // Call the Python API with the level and sentence history
+    const response = await axios.post('http://127.0.0.1:8000/get-registration-sentence', {
+      sentenceHistory: sentenceHistory, // Send the entire sentence history as part of the request
+    });
+
+    // Send the response back to the client
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error calling Python API:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the sentence.' });
+  }
+});
+
+
+app.post('/set-initial-level', async (req, res) => {
+  const { rating, sentence } = req.body;
+  const username = req.session.username;
+
+  try {
+    // Make a POST request to the external API
+    const response = await axios.post('http://127.0.0.1:8000/set-initial-level', {
+        rating: rating,
+        sentence: sentence,
+        user: username
+    });
+
+    // Send the response back to the front end
+    res.json({
+      success: true,
+      id: response.data.id, // Assuming the external API responds with an ID for the saved word
+    });
+  } catch (error) {
+    console.error('Error saving word:', error);
+
+    // Handle the error response to the front end
+    res.status(500).json({
+      success: false,
+      error: 'Error saving word to external API',
+    });
+  }
+});
+
 app.post("/save-word", async (req, res) => {
   console.log("ebnterign serv");
   const { word, translation } = req.body;
 
   const language = "SV";
   // constant username for now
-  const user = "oskar";
+  const user = req.session.username;
   console.log("posted");
 
   try {
@@ -124,7 +186,7 @@ app.get("/get-words", (req, res) => {
 // insert here an api call to GPT for prompts instead of DB
 app.get("/get-text", async (req, res) => {
   const { context, type } = req.query;
-  const user = "oskar";
+  const user = req.session.username;
   try {
     const response = await axios.get("http://127.0.0.1:8000/generate_text", {
       params: {
@@ -168,7 +230,7 @@ app.get("/translate", async (req, res) => {
 });
 
 app.get("/get-contexts", async (req, res) => {
-  const user = "oskar";
+  const user = req.session.username;
   try {
     const response = await axios.get(
       "http://127.0.0.1:8000/generate_contexts",
