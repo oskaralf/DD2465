@@ -60,7 +60,8 @@ app.post('/login', (req, res) => {
   .then(response => {
     console.log("successful login");
     req.session.username = username;
-
+    console.log(response.data.language)
+    req.session.language = response.data.language;
     // Send JSON response to redirect the user
     res.redirect('/dashboard.html');
   })
@@ -79,6 +80,7 @@ app.post('/register', (req, res) => {
       interests: interests
   });
   req.session.username = name;
+  req.session.language = language;
   console.log('asdasda')
   axios.post('http://127.0.0.1:8000/register-user', {
     name: name,
@@ -99,11 +101,13 @@ app.post('/register', (req, res) => {
 
 app.post('/getNewSentence', async (req, res) => {
   const { sentenceHistory } = req.body; // Read level and sentenceHistory from the request body
-
+  const { language } = req.session;
+  console.log(language);
   try {
     // Call the Python API with the level and sentence history
     const response = await axios.post('http://127.0.0.1:8000/get-registration-sentence', {
       sentenceHistory: sentenceHistory, // Send the entire sentence history as part of the request
+      language: language
     });
 
     // Send the response back to the client
@@ -147,7 +151,7 @@ app.post("/save-word", async (req, res) => {
   console.log("ebnterign serv");
   const { word, translation } = req.body;
 
-  const language = "SV";
+  const { language } = req.session;
   // constant username for now
   const user = req.session.username;
   console.log("posted");
@@ -207,7 +211,14 @@ app.get("/get-text", async (req, res) => {
 // DeepL translation
 app.get("/translate", async (req, res) => {
   const word = req.query.word;
-  const targetLang = "SV";
+  const targetLang = 'EN';
+  const language = req.session.language
+  let source_lang = 'EN'
+  if (language === 'spanish'){
+    source_lang = 'ES'
+  }
+  console.log(language)
+  console.log(source_lang)
 
   try {
     const response = await axios.get(
@@ -217,6 +228,7 @@ app.get("/translate", async (req, res) => {
           auth_key: apiKey,
           text: word,
           target_lang: targetLang,
+          source_lang: source_lang
         },
       },
     );
