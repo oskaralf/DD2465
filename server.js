@@ -216,7 +216,10 @@ app.get("/translate", async (req, res) => {
   let source_lang = 'EN'
   if (language === 'spanish'){
     source_lang = 'ES'
+  } else if (language === 'german'){
+    source_lang = 'DE'
   }
+
   console.log(language)
   console.log(source_lang)
 
